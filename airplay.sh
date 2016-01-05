@@ -38,6 +38,6 @@ if ! isinuse $hostname
 then 
 	echo Grabbing control of $hostname. 
         dir=`dirname $0`
-        osascript $dir/clickairplaymenu.applescript $tvname
+        osascript $dir/clickairplaymenu.applescript "$tvname"
 fi
 
