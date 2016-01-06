@@ -6,7 +6,8 @@ isinuse() {
 	# information, but by design doesn't return until killed, so use ping. 
 	ipaddress=$(ping -c 1 $tvhostname | awk -F'[()]' '/PING/{print $2}')
 	echo About to sniff traffic to $tvhostname \($ipaddress\)
-	tcpdump tcp port 7000 and host $ipaddress &> /var/tmp/airplay-tcpdump-output &
+  # Make sure that the user running this script has passwordless sudo tcpdump
+	sudo tcpdump tcp port 7000 and host $ipaddress &> /var/tmp/airplay-tcpdump-output &
 	# Get the PID of the tcpdump command
 	pid=$!
 	# Capture 10 seconds of output, then kill the job
