@@ -12,7 +12,7 @@ isinuse() {
 	pid=$!
 	# Capture 10 seconds of output, then kill the job
 	sleep 10
-	kill $pid
+	sudo kill $pid
 	# Process the output file to see how many packets are reported captured
 	packetcount=`awk -F'[ ]' '/captured/{print $1}' /var/tmp/airplay-tcpdump-output`
 	echo Finished sniffing packets - there were $packetcount. 
