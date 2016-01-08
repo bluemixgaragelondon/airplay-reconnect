@@ -6,12 +6,9 @@ isinuse() {
 	# information, but by design doesn't return until killed, so use ping. 
 	ipaddress=$(ping -c 1 $tvhostname | awk -F'[()]' '/PING/{print $2}')
 	echo About to sniff traffic to $tvhostname \($ipaddress\)
-  arp -a &> /var/tmp/arp-output &
-  pid=$!
-  sleep 10
-  kill $pid
+  arp -n $ipaddress &> /var/tmp/arp-output
   fieldindex='$4'
-  # Parse something of the form ? (10.37.109.150) at 40:33:1a:3d:e6:ee on en0 ifscope [ethernet] ? (10.37.109.158) at 34:2:86:56:b6:8e on en0 ifscope [ethernet]
+  # Parse something of the form ? (10.37.109.150) at 40:33:1a:3d:e6:ee on en0 ifscope [ethernet] 
   # The awk quotes get a bit messy with the variable substitution, so split the expression up
   echo Parsing mac address from line `awk -F"[ ]" "/\($ipaddress\)/{print}" /var/tmp/arp-output`
   macaddress=`awk -F"[ ]" "/($ipaddress)/{print $fieldindex}" /var/tmp/arp-output`
