@@ -1,5 +1,7 @@
 #! /bin/bash
 
+wifidevice=`networksetup -listallhardwareports | grep -A1 Wi-Fi | grep Device | sed s/"Device: "/""/`
+
 isinuse() {
 	tvhostname=$1
 	# For a bonjour lookup, nslookup and host don't work, so we can use dns-sd or ping. The dns-sd gives more 
@@ -14,7 +16,7 @@ isinuse() {
   macaddress=`awk -F"[ ]" "/($ipaddress)/{print $fieldindex}" /var/tmp/arp-output`
  echo Looking for traffic to mac address $macaddress 
   # Make sure that the user running this script has passwordless sudo tcpdump
-	sudo tcpdump -i en0 -I ether dst $macaddress &> /var/tmp/airplay-tcpdump-output &
+	sudo tcpdump -i $wifidevice -I ether dst $macaddress &> /var/tmp/airplay-tcpdump-output &
 	# Get the PID of the tcpdump command
 	pid=$!
 	# Capture 10 seconds of output, then kill the job
@@ -36,16 +38,22 @@ isinuse() {
 
 }
 
+
 tvname=$1
 
 # Substitute dashes for spaces to find the Bonjour name
 hostname=${tvname/ /-}.local
 echo Hostname is $hostname
 
-
 if ! isinuse $hostname
 then 
 	echo Grabbing control of $hostname. 
+# Bounce the wifi to make sure it's in a good state since monitor mode can make it hard to connect to the TV
+    echo Bouncing wifi interface $wifidevice
+        networksetup -setairportpower $wifidevice off
+        networksetup -setairportpower $wifidevice on
+# Allow the wifi to initialise
+        sleep 20
         dir=`dirname $0`
         osascript $dir/clickairplaymenu.applescript "$tvname"
 fi
