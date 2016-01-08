@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Copy this file to ~/Library/LaunchAgents -->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>bluemix.garage.grab.airplay</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>/Users/YOUR-PATH-HERE/airplay-reconnect/airplay.sh</string>
+      <string>YOUR TV</string>
+    </array>
+    <key>StartInterval</key>
+    <integer>60</integer>
+    <key>StandardOutPath</key>
+    <string>/Users/YOUR-PATH-HERE/logs/autoairplay.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/YOUR-PATH-HERE/logs/autoairplay.log</string>
+  </dict>
+</plist>
